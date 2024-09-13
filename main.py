@@ -1,26 +1,21 @@
+class Task:
+    def __init__(self, description, deadline):
+        self.description = description
+        self.deadline = deadline
+        self.status = "Не выполнено"
+
+    def mark_completed(self):
+        self.status = "Выполнено"
+
+    def __str__(self):
+        return f"{self.description} (Срок: {self.deadline}) - {self.status}"
+
 class TaskManager:
     def __init__(self):
         self.tasks = []
-        print("Менеджер задач инициализирован.")
 
-    class Task:
-        def __init__(self, description, due_date):
-            self.description = description
-            self.due_date = due_date
-            self.completed = False
-
-        def mark_completed(self):
-            self.completed = True
-            print(f"Задача '{self.description}' отмечена как выполненная.")
-
-        def __str__(self):
-            status = "Выполнено" if self.completed else "Не выполнено"
-            return f"{self.description} (Срок: {self.due_date}) - {status}"
-
-    def add_task(self, description, due_date):
-        new_task = self.Task(description, due_date)
-        self.tasks.append(new_task)
-        print(f"Добавлена новая задача: '{description}' с сроком: {due_date}.")
+    def add_task(self, description, deadline):
+        self.tasks.append(Task(description, deadline))
 
     def mark_task_completed(self, task_index):
         if 0 <= task_index < len(self.tasks):
@@ -29,11 +24,33 @@ class TaskManager:
             print("Задача с таким индексом не найдена.")
 
     def show_current_tasks(self):
-        current_tasks = [task for task in self.tasks if not task.completed]
-        if current_tasks:
-            print("Текущие задачи:")
-            for index, task in enumerate(current_tasks):
-                print(f"{index}. {task}")
-        else:
+        if not self.tasks:
             print("Нет текущих задач.")
+            return
 
+        print("Текущие задачи:")
+        for index, task in enumerate(self.tasks):
+            print(f"{index}. {task}")
+
+
+if __name__ == "__main__":
+    manager = TaskManager()
+
+    while True:
+        print("\nМеню:\n1. Добавить задачу\n2. Показать текущие задачи\n3. Отметить задачу как выполненную\n4. Выйти")
+        choice = input("Выберите действие (1-4): ")
+
+        if choice == "1":
+            description = input("Введите описание задачи: ")
+            deadline = input("Введите срок выполнения задачи: ")
+            manager.add_task(description, deadline)
+        elif choice == "2":
+            manager.show_current_tasks()
+        elif choice == "3":
+            task_index = int(input("Введите индекс задачи для отметки как выполненной: "))
+            manager.mark_task_completed(task_index)
+        elif choice == "4":
+            print("Выход из программы.")
+            break
+        else:
+            print("Неверный выбор. Пожалуйста, попробуйте снова.")
